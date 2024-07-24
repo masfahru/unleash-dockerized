@@ -1,0 +1,11 @@
+{
+  "name": "unleash-dockerized",
+  "description": "A Docker container solution for Unleash, utilizing Node.js clustering for enhanced performance and scalability.",
+  "version": "1.0.0",
+  "main": "server.js",
+  "license": "MIT",
+  "author": "Imam Fahrur Rofi <imamfahrurrofi@gmail.com>",
+  "dependencies": {
+    "unleash-server": "^6.0.6"
+  }
+}
