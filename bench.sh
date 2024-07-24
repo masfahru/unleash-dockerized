@@ -4,7 +4,7 @@
 export AUTH_TOKEN=TOKEN_PLACEHOLDER
 
 # Download hey
-wget https://hey-release.s3.us-east-2.amazonaws.com/hey_linux_amd64 -O hey
+wget https://hey-release.s3.us-east-2.amazonaws.com/hey_linux_amd64 -O hey > /dev/null 2>&1
 
 # Make hey executable
 chmod +x hey

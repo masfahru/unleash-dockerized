@@ -7,7 +7,7 @@ fetch('http://localhost:4242/api/admin/login', {
   method: 'POST', headers: {
     'Content-Type': 'application/json',
   }, body: JSON.stringify({
-    "username": "admin", "password": "unleash4all"
+    username: "admin", password: "unleash4all"
   }),
 }).then(async (response) => {
   if (response.ok) {
@@ -86,9 +86,12 @@ fetch('http://localhost:4242/api/admin/login', {
     }
   } else {
     console.error('Login failed');
+    console.error(await response.text());
+    process.exit(1);
   }
 }).catch((error) => {
   console.error('Login failed', error);
+  process.exit(1);
 }).finally(() => {
   console.log('Setup completed');
   process.exit();
