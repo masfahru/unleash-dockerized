@@ -2,6 +2,7 @@ const fs = require('fs');
 
 // login to the app using fetch and store the session cookie
 let token = null;
+let cookies = null;
 
 fetch('http://localhost:4242/auth/simple/login', {
   method: 'POST', headers: {
@@ -12,10 +13,12 @@ fetch('http://localhost:4242/auth/simple/login', {
 }).then(async (response) => {
   if (response.ok) {
     console.log('Login successful');
+    cookies = response.headers.get('set-cookie');
     // create an api token for frontend
     await fetch('http://localhost:4242/api/admin/api-tokens', {
       method: 'POST', headers: {
         'Content-Type': 'application/json',
+        'Cookie': cookies,
       }, body: JSON.stringify({
         "type": "frontend", "tokenName": "token-frontend", "project": "default", "environment": "production"
       }),
@@ -27,7 +30,7 @@ fetch('http://localhost:4242/auth/simple/login', {
           console.log('Token:', token);
         });
       } else {
-        console.error('Token creation failed');
+        console.error('Token creation failed', await response.text());
       }
     })
     if (token) {
@@ -35,13 +38,18 @@ fetch('http://localhost:4242/auth/simple/login', {
       const featureFlags = Array.from({length: 50}, (_, i) => fetch('http://localhost:4242/api/admin/projects/default/features', {
         method: 'POST', headers: {
           'Content-Type': 'application/json',
+          'Cookie': cookies,
         }, body: JSON.stringify({
           name: `switch-comment-${i + 1}`,
           type: "kill-switch",
           description: "Controls disabling of the comments section in case of an incident",
           impressionData: false
         }),
-      }));
+      }).then(async (response) => {
+        if (!response.ok) {
+          console.error('Feature flag creation failed', await response.text());
+        }})
+      );
 
       await Promise.all(featureFlags).then(() => {
         console.log('Feature flags created');
@@ -55,14 +63,15 @@ fetch('http://localhost:4242/auth/simple/login', {
       await fetch('http://localhost:4242/api/admin/projects/default/bulk_features/environments/production/on', {
         method: 'POST', headers: {
           'Content-Type': 'application/json',
+          'Cookie': cookies,
         }, body: JSON.stringify({
           features
         }),
-      }).then((response) => {
+      }).then(async (response) => {
         if (response.ok) {
           console.log('Feature flags enabled');
         } else {
-          console.error('Feature flags enabling failed');
+          console.error('Feature flags enabling failed', await response.text());
         }
       }).catch((error) => {
         console.error('Feature flags enabling failed', error);
@@ -85,13 +94,10 @@ fetch('http://localhost:4242/auth/simple/login', {
       });
     }
   } else {
-    console.error('Login failed');
-    console.error(await response.text());
-    process.exit(1);
+    console.error('Login failed', await response.text());
   }
 }).catch((error) => {
   console.error('Login failed', error);
-  process.exit(1);
 }).finally(() => {
   console.log('Setup completed');
   process.exit();
