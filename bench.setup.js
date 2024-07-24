@@ -28,6 +28,21 @@ fetch('http://localhost:4242/auth/simple/login', {
         await response.json().then((data) => {
           token = data.secret;
           console.log('Token:', token);
+          // modify file bench.sh, replace token after the export AUTH_TOKEN= with the actual token
+          fs.readFile('bench.sh', 'utf8', (err, data) => {
+            if (err) {
+              console.error('Error reading file:', err);
+            } else {
+              const updatedData = data.replace(/(export AUTH_TOKEN=).*/, `$1${token}`);
+              fs.writeFile('bench.sh', updatedData, 'utf8', (err) => {
+                if (err) {
+                  console.error('Error writing file:', err);
+                } else {
+                  console.log('Token updated in bench.sh');
+                }
+              });
+            }
+          });
         });
       } else {
         console.error('Token creation failed', await response.text());
@@ -75,22 +90,6 @@ fetch('http://localhost:4242/auth/simple/login', {
         }
       }).catch((error) => {
         console.error('Feature flags enabling failed', error);
-      });
-
-      // modify file bench.sh, replace token after the export AUTH_TOKEN= with the actual token
-      fs.readFile('bench.sh', 'utf8', (err, data) => {
-        if (err) {
-          console.error('Error reading file:', err);
-        } else {
-          const updatedData = data.replace(/(export AUTH_TOKEN=).*/, `$1${token}`);
-          fs.writeFile('bench.sh', updatedData, 'utf8', (err) => {
-            if (err) {
-              console.error('Error writing file:', err);
-            } else {
-              console.log('Token updated in bench.sh');
-            }
-          });
-        }
       });
     }
   } else {
