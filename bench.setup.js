@@ -3,7 +3,7 @@ const fs = require('fs');
 // login to the app using fetch and store the session cookie
 let token = null;
 
-fetch('http://localhost:4242/api/admin/login', {
+fetch('http://localhost:4242/auth/simple/login', {
   method: 'POST', headers: {
     'Content-Type': 'application/json',
   }, body: JSON.stringify({
