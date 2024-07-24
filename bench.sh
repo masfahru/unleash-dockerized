@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set authorization token
-export AUTH_TOKEN=TOKEN_PLACEHOLDER
+export AUTH_TOKEN=default:production.9883d3e1c7d43cea52f5870a2cd65d430d70b247ba525be33dee9db8
 
 # Download hey
 wget https://hey-release.s3.us-east-2.amazonaws.com/hey_linux_amd64 -O hey > /dev/null 2>&1
