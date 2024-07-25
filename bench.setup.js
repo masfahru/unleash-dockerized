@@ -26,7 +26,7 @@ fetch('http://localhost:4242/auth/simple/login', {
     }).then(async (response) => {
       if (response.ok) {
         console.log('Token created');
-        await response.json().then((data) => {
+        await response.json().then(async (data) => {
           token = data.secret;
           console.log('Token:', token);
           // modify file bench.sh, replace token after the export AUTH_TOKEN= with the actual token
@@ -43,6 +43,20 @@ fetch('http://localhost:4242/auth/simple/login', {
                 }
               });
             }
+          });
+
+          await systeminformation.cpu().then(({ flags, cache, ...rest }) => {
+            const rows = Object.entries(rest).map(([key, value]) => `${key}: ${value}`);
+
+            const tableString = rows.join('\n');
+
+            fs.writeFile('bench-cpu-info.txt', tableString, 'utf8', (err) => {
+              if (err) {
+                console.error('Error writing file:', err);
+              } else {
+                console.log('CPU info written to bench-result-cpu-info.txt');
+              }
+            });
           });
         });
       } else {
@@ -91,20 +105,6 @@ fetch('http://localhost:4242/auth/simple/login', {
         }
       }).catch((error) => {
         console.error('Feature flags enabling failed', error);
-      });
-
-      await systeminformation.cpu().then(({ flags, cache, ...rest }) => {
-        const rows = Object.entries(rest).map(([key, value]) => `${key}: ${value}`);
-
-        const tableString = rows.join('\n');
-
-        fs.writeFile('bench-cpu-info.txt', tableString, 'utf8', (err) => {
-          if (err) {
-            console.error('Error writing file:', err);
-          } else {
-            console.log('CPU info written to bench-result-cpu-info.txt');
-          }
-        });
       });
     }
   } else {
