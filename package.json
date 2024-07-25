@@ -6,6 +6,7 @@
   "license": "MIT",
   "author": "Imam Fahrur Rofi <imamfahrurrofi@gmail.com>",
   "dependencies": {
+    "systeminformation": "^5.22.11",
     "unleash-server": "^6.0.6"
   }
 }

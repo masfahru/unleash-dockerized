@@ -1,4 +1,5 @@
 const fs = require('fs');
+const systeminformation = require('systeminformation');
 
 // login to the app using fetch and store the session cookie
 let token = null;
@@ -90,6 +91,20 @@ fetch('http://localhost:4242/auth/simple/login', {
         }
       }).catch((error) => {
         console.error('Feature flags enabling failed', error);
+      });
+
+      await systeminformation.cpu().then(({ flags, cache, ...rest }) => {
+        const rows = Object.entries(rest).map(([key, value]) => `${key}: ${value}`);
+
+        const tableString = rows.join('\n');
+
+        fs.writeFile('bench-cpu-info.txt', tableString, 'utf8', (err) => {
+          if (err) {
+            console.error('Error writing file:', err);
+          } else {
+            console.log('CPU info written to bench-result-cpu-info.txt');
+          }
+        });
       });
     }
   } else {
