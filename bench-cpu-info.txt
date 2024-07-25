@@ -1,0 +1,19 @@
+manufacturer: AMD
+brand: EPYC 7763 64-Core Processor
+vendor: AMD
+family: 25
+model: 1
+stepping: 1
+revision: 
+voltage: 
+speed: 2.45
+speedMin: NaN
+speedMax: NaN
+governor: 
+cores: 4
+physicalCores: 2
+performanceCores: 2
+efficiencyCores: 0
+processors: 1
+socket: 
+virtualization: true

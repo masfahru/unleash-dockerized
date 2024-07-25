@@ -10,7 +10,7 @@ chmod +x hey
 sudo mv hey /usr/local/bin
 
 # Set authorization token
-export AUTH_TOKEN=default:production.45eac225a5defa2cd3f557af017ae8046038f351760d11c1aef38503
+export AUTH_TOKEN=default:production.4fd4d75a81b9c7bacc18b92d18408ae2f26176cd5772b6b7510ed2d0
 
 # Start the app.js in the background
 node --env-file=.env.example app.js &
